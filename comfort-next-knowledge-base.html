@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comfort Next Knowledge Base for Amanda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f2f4f1;
+      --paper: #ffffff;
+      --ink: #141816;
+      --muted: #5d675f;
+      --line: #e3e8e3;
+      --green: #00a84f;
+      --green-dark: #067a38;
+      --green-soft: #e8f7ee;
+      --black: #101412;
+      --amber: #9a6208;
+      --amber-soft: #fff6e6;
+      --shadow: 0 12px 32px rgba(16, 20, 18, 0.06);
+      --sidebar: 248px;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 420px at 100% -10%, rgba(0, 168, 79, 0.12), transparent 60%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    a { color: var(--green-dark); }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 22px;
+      background: rgba(16, 20, 18, 0.94);
+      color: #fff;
+      backdrop-filter: blur(12px);
+    }
+
+    .mark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      min-width: 148px;
+    }
+
+    .mark strong {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .mark span {
+      margin-top: 3px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .mark span i {
+      font-style: normal;
+      color: var(--green);
+    }
+
+    .mark small {
+      margin-top: 4px;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .search {
+      position: relative;
+      flex: 1;
+      max-width: 640px;
+      margin-left: auto;
+    }
+
+    .search input {
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 108px 12px 16px;
+      font: inherit;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      outline: none;
+    }
+
+    .search input::placeholder { color: rgba(255, 255, 255, 0.55); }
+
+    .search input:focus { background: rgba(255, 255, 255, 0.16); }
+
+    #search-count {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.72);
+      pointer-events: none;
+    }
+
+    mark.hit {
+      background: #ffe56a;
+      color: #141816;
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+
+    .nav a.is-hidden { opacity: 0.35; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      gap: 28px;
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 86px;
+      align-self: start;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .nav p {
+      margin: 4px 8px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: var(--green-soft);
+      color: var(--green-dark);
+    }
+
+    .hero {
+      padding: 28px 28px 22px;
+      border-radius: 24px;
+      background: var(--black);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .hero .source {
+      margin: 14px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14.5px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      color: #7dffb4;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    section {
+      margin-top: 22px;
+      padding: 22px 22px 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    section h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card,
+    .note,
+    .gap,
+    .faq,
+    .tier {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f7f8f6;
+      border: 1px solid var(--line);
+    }
+
+    .card p,
+    .note p,
+    .gap p,
+    .faq p,
+    .tier p,
+    .lead p {
+      margin: 0;
+    }
+
+    .card .kicker {
+      display: inline-block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--green-dark);
+    }
+
+    .sources {
+      margin: 4px 0 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #f3f6f3;
+      color: var(--muted);
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    .sources a { word-break: break-all; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .contact-grid a {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .contact-grid .card strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .stack { display: grid; gap: 12px; margin-bottom: 14px; }
+
+    .rebates {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .rebate {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--green-soft);
+      border: 1px solid #cfeedd;
+    }
+
+    .rebate b {
+      display: block;
+      font-size: 18px;
+      color: var(--green-dark);
+      letter-spacing: -0.02em;
+    }
+
+    .rebate span { font-size: 13.5px; }
+
+    .faq { margin-bottom: 12px; }
+
+    .faq .q {
+      margin: 0 0 8px;
+      font-weight: 800;
+    }
+
+    .faq .q span {
+      color: var(--green-dark);
+      margin-right: 6px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+
+    .filters button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .filters button[aria-pressed="true"] {
+      background: var(--black);
+      color: #fff;
+      border-color: var(--black);
+    }
+
+    .table-wrap { overflow-x: auto; margin-bottom: 14px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th {
+      text-align: left;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    tr:hover td { background: #f7fbf8; }
+
+    .price {
+      font-weight: 800;
+      white-space: nowrap;
+      color: var(--green-dark);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eef2ef;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pill.gas { background: #e7f3ff; color: #135a92; }
+    .pill.propane { background: #fff1e4; color: #9a4b08; }
+
+    .linkish {
+      font-size: 12.5px;
+      word-break: break-all;
+    }
+
+    .tiers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tier { border-left: 4px solid var(--green); }
+
+    .gap {
+      margin-bottom: 10px;
+      background: var(--amber-soft);
+      border-color: #f3e0b8;
+    }
+
+    .empty {
+      display: none;
+      margin: 18px 0;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--paper);
+      border: 1px dashed var(--line);
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .nav {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .nav p { width: 100%; }
+      .stats,
+      .cards,
+      .contact-grid,
+      .rebates { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { flex-wrap: wrap; }
+      .search { max-width: none; margin-left: 0; width: 100%; }
+      .stats,
+      .cards,
+      .contact-grid,
+      .rebates { grid-template-columns: 1fr; }
+      .layout { width: min(100% - 20px, 1180px); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="mark" aria-hidden="true">
+      <strong>COMFORT</strong>
+      <span>N<i>e</i>XT</span>
+      <small>HOME SERVICES</small>
+    </div>
+    <label class="search">
+      <input id="finder" type="search" placeholder="Search any keyword, city, price, brand, or phone number" aria-label="Search this knowledge base" />
+      <span id="search-count" hidden></span>
+    </label>
+  </header>
+
+  <div class="layout">
+    <nav class="nav" aria-label="Contents">
+      <p>Contents</p>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#brands">Brands and products</a>
+      <a href="#area">Service area</a>
+      <a href="#contact">Contact and hours</a>
+      <a href="#financing">Financing and rebates</a>
+      <a href="#warranties">Warranties</a>
+      <a href="#maintenance">Maintenance plans</a>
+      <a href="#events">Events and contests</a>
+      <a href="#faqs">FAQs</a>
+      <a href="#barbecues">Barbecues</a>
+      <a href="#gaps">Gaps</a>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <h1>Comfort Next Knowledge Base for Amanda (AI Sales/Greeter Agent)</h1>
+        <p class="source"><strong>Source and date:</strong> Crawled 2026-09-28 from comfortnext.ca (page sitemap, 39 pages) and aireonekw.ca barbecue category pages (3 listing pages, 26 products, plus 5 sample product pages for specs).</p>
+        <div class="stats">
+          <div class="stat"><b>4.9</b><span>based on 376 Google reviews</span></div>
+          <div class="stat"><b>25 years</b><span>of experience</span></div>
+          <div class="stat"><b>24/7</b><span>Service</span></div>
+          <div class="stat"><b>$7,500</b><span>Access to Rebates up to $7,500</span></div>
+        </div>
+      </header>
+
+      <p class="empty" id="empty">No matches. Try a service, city, brand, price, phone number, or any word from the page.</p>
+
+      <section id="about" data-block>
+        <h2>About Comfort Next</h2>
+        <div class="cards">
+          <article class="card"><p>Full service HVAC and smart energy solutions provider serving Southern Ontario.</p></article>
+          <article class="card"><p>More than 25 years of experience (stated as "more than twenty-five years" and "25 years of experience").</p></article>
+          <article class="card"><p>Family owned HVAC contractor, started in traditional heating and cooling, now also offers clean energy solutions (solar, battery storage, EV chargers).</p></article>
+          <article class="card"><p>Positioning line: "Future-Ready Energy for Modern Living".</p></article>
+          <article class="card"><p>Certified and licensed technicians, described as certified HVAC and hydronic (boiler) specialists.</p></article>
+          <article class="card"><p>Google Guaranteed certified (passed background and quality verification checks).</p></article>
+          <article class="card"><p>Rated 4.9 based on 376 Google reviews; described elsewhere as "consistent 5-star reviews" and "hundreds of satisfied customers".</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/">https://comfortnext.ca/</a>, <a href="https://comfortnext.ca/about-us/">https://comfortnext.ca/about-us/</a>)</p>
+      </section>
+
+      <section id="services" data-block>
+        <h2>Services</h2>
+        <div class="cards">
+          <article class="card"><span class="kicker">Furnaces</span><p>Furnaces: installation, repair, maintenance. Gas (natural gas or propane), electric, and hybrid (furnace plus heat pump) systems. Same-day installation for most standard jobs (about 1 day). Typical furnace repairs take 1 to 2 hours depending on the issue.</p></article>
+          <article class="card"><span class="kicker">Heat pumps</span><p>Heat pumps: sales, rentals, installation, repair, maintenance. Ducted, ductless (mini-split), and cold climate air source types. Efficiency described as "over 300%", meaning about three units of heat per unit of electricity used. Average lifespan 12 to 20 years with proper maintenance.</p></article>
+          <article class="card"><span class="kicker">Air conditioning</span><p>Air conditioning: repair, installation, maintenance, rentals. Central, ductless mini-split, low-duct heat pump, and single-room units.</p></article>
+          <article class="card"><span class="kicker">Boilers</span><p>Boilers: sales, rentals, installation, repair, maintenance. Conventional, condensing, and combi types. Standard installations take 1 to 2 days; complex conversions may take longer. Boiler systems described as lasting 20 to 30 years.</p></article>
+          <article class="card"><span class="kicker">Air handlers</span><p>Air handlers: sales, rentals, installation, repair, maintenance, including diagnostics for motor, blower, control board, and airflow issues.</p></article>
+          <article class="card"><span class="kicker">Fireplaces</span><p>Fireplaces: sales, rentals, installation, repair, maintenance. Gas fireplaces, gas fireplace inserts, gas stoves, and electric fireplaces (wall mounted, three sided, see through, built in, modern styles).</p></article>
+          <article class="card"><span class="kicker">Water heaters</span><p>Water heaters: tank and tankless, sales and rentals, installation and 24/7 emergency repair, maintenance including flushing and anode rod replacement. Tank sizes available: 40, 50, and 60 gallon; gas (natural gas) and electric models.</p></article>
+          <article class="card"><span class="kicker">Water products</span><p>Water products: water softeners, reverse osmosis systems, water quality consultation and testing.</p></article>
+          <article class="card"><span class="kicker">Air quality</span><p>Air quality: humidifier installation, dehumidifier installation, HRV/ERV systems, UV light air purifiers, air cleaners, iWave air purification systems. Systems described as maintenance-free and ozone-free.</p></article>
+          <article class="card"><span class="kicker">Solar panels</span><p>Solar panels: installation and system design, roof inspection and permits, grid connection, battery backup pairing, bifacial panel and full kit options, 1 to 2 day install timeframe.</p></article>
+          <article class="card"><span class="kicker">Smart battery storage</span><p>Smart battery storage: whole home battery backup, 10kWh to 30kWh options (15 to 20kWh recommended for most homes), next-day installation, works with or without solar.</p></article>
+          <article class="card"><span class="kicker">EV charger installation</span><p>EV charger installation: Level 2 chargers for residential and commercial, smart charging with usage tracking, scheduling and load balancing, servicing Tesla, Hyundai Ioniq, Ford Mustang Mach-E and other EVs.</p></article>
+          <article class="card"><p>Generators are mentioned as part of the energy product line on the homepage and about page.</p></article>
+          <article class="card"><p>All services offer free consultations and free quotes. Almost every service page repeats: "Satisfaction Guaranteed", "24/7 Service", "Fair Pricing" or "No hidden fees" and transparent, upfront pricing.</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/heating-systems/">https://comfortnext.ca/heating-systems/</a>, <a href="https://comfortnext.ca/cooling-systems/">https://comfortnext.ca/cooling-systems/</a>, <a href="https://comfortnext.ca/heat-pumps/">https://comfortnext.ca/heat-pumps/</a>, <a href="https://comfortnext.ca/furnace-services/">https://comfortnext.ca/furnace-services/</a>, <a href="https://comfortnext.ca/boiler-services/">https://comfortnext.ca/boiler-services/</a>, <a href="https://comfortnext.ca/air-handler/">https://comfortnext.ca/air-handler/</a>, <a href="https://comfortnext.ca/fireplace-services/">https://comfortnext.ca/fireplace-services/</a>, <a href="https://comfortnext.ca/water-heaters/">https://comfortnext.ca/water-heaters/</a>, <a href="https://comfortnext.ca/water-products/">https://comfortnext.ca/water-products/</a>, <a href="https://comfortnext.ca/air-quality/">https://comfortnext.ca/air-quality/</a>, <a href="https://comfortnext.ca/solar-panel-system/">https://comfortnext.ca/solar-panel-system/</a>, <a href="https://comfortnext.ca/smart-battery-storage/">https://comfortnext.ca/smart-battery-storage/</a>, <a href="https://comfortnext.ca/ev-charger-installation/">https://comfortnext.ca/ev-charger-installation/</a>)</p>
+      </section>
+
+      <section id="brands" data-block>
+        <h2>Brands and products</h2>
+        <div class="stack">
+          <article class="card"><p>Carrier is the primary HVAC brand named across furnace, cooling and heat pump pages.</p></article>
+          <article class="card"><p>Carrier air conditioners come in three tiers: Comfort Series (single stage, up to 15 SEER, budget friendly), Performance Series (two stage compressor, up to 17 SEER, quieter), and Infinity Series (multi stage, near silent, up to 19 SEER, smart technology).</p></article>
+          <article class="card"><p>The company also states it will "service all brands and models", not only Carrier, for furnace and heat pump repair.</p></article>
+          <article class="card"><p>Other brand names mentioned: Lennox, Gree, Midea (listed as brands serviced on the homepage).</p></article>
+          <article class="card"><p>Fireplaces: Napoleon brand is the featured fireplace partner.</p></article>
+          <article class="card"><p>Ecobee smart thermostats are mentioned in connection with AC installation (thermostat integration assistance).</p></article>
+          <article class="card"><p>No specific brand names are given for water heaters, water softeners, or boilers.</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/">https://comfortnext.ca/</a>, <a href="https://comfortnext.ca/cooling-systems/">https://comfortnext.ca/cooling-systems/</a>, <a href="https://comfortnext.ca/air-conditioner/">https://comfortnext.ca/air-conditioner/</a>, <a href="https://comfortnext.ca/fireplace-services/">https://comfortnext.ca/fireplace-services/</a>, <a href="https://comfortnext.ca/air-conditioner/air-conditioner-installation/">https://comfortnext.ca/air-conditioner/air-conditioner-installation/</a>)</p>
+      </section>
+
+      <section id="area" data-block>
+        <h2>Service area</h2>
+        <div class="stack">
+          <article class="card"><p>Head office: 25-220 Industrial Pkwy S, Aurora, ON L4G3V6.</p></article>
+          <article class="card"><p>Core service area named repeatedly: Aurora and the Greater Toronto Area (GTA), Southern Ontario.</p></article>
+          <article class="card"><p>Dedicated city landing pages exist for: Aurora, Milton, Newmarket, Vaughan, and Brantford, each repeating the same "24/7 Local Support", "Access to Rebates up to $7,500", "Transparent Quotes with No Hidden Fees" and "hundreds of 5-star reviews" messaging for that city.</p></article>
+          <article class="card"><p>Other cities named on various service pages: Guelph (own rebate program page), Barrie, Midland.</p></article>
+          <article class="card"><p>A general phrase used across pages: "Milton, Newmarket, Aurora, Brantford, and surrounding areas in GTA, Barrie, and Midland".</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/contact-us/">https://comfortnext.ca/contact-us/</a>, <a href="https://comfortnext.ca/smart-energy-hvac-solutions-in-aurora/">https://comfortnext.ca/smart-energy-hvac-solutions-in-aurora/</a>, <a href="https://comfortnext.ca/smart-energy-hvac-solutions-in-milton/">https://comfortnext.ca/smart-energy-hvac-solutions-in-milton/</a>, <a href="https://comfortnext.ca/smart-energy-hvac-solutions-in-newmarket/">https://comfortnext.ca/smart-energy-hvac-solutions-in-newmarket/</a>, <a href="https://comfortnext.ca/smart-energy-hvac-solutions-in-vaughan/">https://comfortnext.ca/smart-energy-hvac-solutions-in-vaughan/</a>, <a href="https://comfortnext.ca/smart-energy-hvac-solutions-in-brantford/">https://comfortnext.ca/smart-energy-hvac-solutions-in-brantford/</a>, <a href="https://comfortnext.ca/water-products/">https://comfortnext.ca/water-products/</a>, <a href="https://comfortnext.ca/air-quality/">https://comfortnext.ca/air-quality/</a>)</p>
+      </section>
+
+      <section id="contact" data-block>
+        <h2>Contact, hours and emergency service</h2>
+        <div class="contact-grid">
+          <article class="card"><span class="kicker">Phone</span><strong>833-888-6398</strong><p>Phone: 833-888-6398.</p></article>
+          <article class="card"><span class="kicker">Email</span><strong>hello@comfortnext.ca</strong><p>Email: hello@comfortnext.ca.</p></article>
+          <article class="card"><span class="kicker">Address</span><strong>25-220 Industrial Pkwy S, Aurora, ON L4G3V6</strong><p>Address: 25-220 Industrial Pkwy S, Aurora, ON L4G3V6.</p></article>
+        </div>
+        <div class="stack">
+          <article class="card"><p>Facebook: comfortNEXT. Instagram: comfortnext.</p></article>
+          <article class="card"><p>24/7 availability and support stated repeatedly across the site ("24/7 Support", "24/7 Local Support You Can Count On", "fast, around the clock response times").</p></article>
+          <article class="card"><p>Emergency service explicitly offered for: heat pumps, furnaces, air conditioners, boilers, and water heaters, described as 24/7 with same day service common.</p></article>
+          <article class="card"><p>No specific published business hours (open/close times) were found anywhere on the site; only "24/7" language is used.</p></article>
+          <article class="card"><p>The contact page has a form with a service type dropdown: Smart Battery, Solar Panels, Furnace, Air Conditioning, Water Heaters, Heat Pumps, Smart Thermostats, EV Charging, Generator, Fireplace, Other.</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/contact-us/">https://comfortnext.ca/contact-us/</a>, <a href="https://comfortnext.ca/">https://comfortnext.ca/</a>)</p>
+      </section>
+
+      <section id="financing" data-block>
+        <h2>Financing, rebates and promotions</h2>
+        <div class="stack">
+          <article class="note"><p>General rebate claim (repeated on homepage and city pages): "up to $7,500 in rebates by upgrading to a qualified heat pump" / "Access to Rebates up to $7,500".</p></article>
+          <article class="note"><p>Financing: "12-month, no-pay, no-interest financing" through FinanceIt, described elsewhere as "0% financing" and "low-payment or 0% financing with quick approval".</p></article>
+          <article class="note"><p>2025 Home Renovation Savings Program, described as up to $12,000 in total rebates available, including:</p></article>
+        </div>
+        <div class="rebates">
+          <article class="rebate"><b>$600</b><span>$600 rebate for a home energy assessment (requires a recent Enbridge Gas bill).</span></article>
+          <article class="rebate"><b>$7,500</b><span>Cold Climate Air Source Heat Pump: up to $7,500.</span></article>
+          <article class="rebate"><b>$12,000</b><span>Ground Source Heat Pump: up to $12,000.</span></article>
+          <article class="rebate"><b>$8,900</b><span>Insulation (attic, wall, foundation): up to $8,900.</span></article>
+          <article class="rebate"><b>$75</b><span>Smart Thermostat: $75.</span></article>
+          <article class="rebate"><b>$500</b><span>Heat Pump Water Heater: $500.</span></article>
+          <article class="rebate"><b>$100</b><span>Windows and Doors: $100 per unit.</span></article>
+          <article class="rebate"><b>$10,000</b><span>Solar Panels and Battery Storage: up to $10,000.</span></article>
+        </div>
+        <div class="stack">
+          <article class="note"><p>Rebates typically processed within 30 to 60 days.</p></article>
+          <article class="note"><p>Eligibility: Ontario homeowners or renters with landlord approval, residential properties in Ontario, Energy Star certified products, income based support available through an Energy Affordability Program.</p></article>
+          <article class="note"><p>Home Efficiency Rebate Plus (HER+): up to $10,000 in rebates plus $600 toward an EnerGuide home evaluation (mentioned on the heat pumps page).</p></article>
+          <article class="note"><p>Guelph Greener Homes program (a separate municipal program Comfort Next helps clients apply to): 0% interest loans up to $50,000, grants up to $15,000, first come first served, covers solar panels, heat pumps, insulation and air sealing, windows and doors, heat pump water heaters, and smart thermostats. Four step process: eligibility assessment and home energy evaluation, application planning, installation by licensed technicians, post-retrofit verification before funds are released.</p></article>
+          <article class="note"><p>Solar: up to $10,000 in interest-free financing for 10 years through the Canada Greener Homes Loan; Ontario homeowners may also qualify for federal grants or provincial rebates.</p></article>
+          <article class="note"><p>Smart battery storage: claim up to $10,000 in rebates; a promotional "free 2kWh backup generator" offer is mentioned as limited time; stated savings of up to 75% on hydro bills, or $100 to $250 per month.</p></article>
+          <article class="note"><p>Ontario context note used on the offers page: the province is investing "$10.9 billion" into expanded energy-efficiency programs.</p></article>
+          <article class="note"><p>Rental options (buy, rent, or finance) are offered for furnaces, air conditioners, water heaters, boilers, and tankless water heaters, with free maintenance and repairs included on rentals.</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/offers-and-rebates/">https://comfortnext.ca/offers-and-rebates/</a>, <a href="https://comfortnext.ca/offers-and-rebates/guelph-greener-homes/">https://comfortnext.ca/offers-and-rebates/guelph-greener-homes/</a>, <a href="https://comfortnext.ca/heat-pumps/">https://comfortnext.ca/heat-pumps/</a>, <a href="https://comfortnext.ca/solar-panel-system/">https://comfortnext.ca/solar-panel-system/</a>, <a href="https://comfortnext.ca/smart-battery-storage/">https://comfortnext.ca/smart-battery-storage/</a>, <a href="https://comfortnext.ca/">https://comfortnext.ca/</a>)</p>
+      </section>
+
+      <section id="warranties" data-block>
+        <h2>Warranties and guarantees</h2>
+        <div class="stack">
+          <article class="card"><p>"Satisfaction Guaranteed" is stated on nearly every service page (furnaces, boilers, AC installation, water heaters, EV chargers, fireplaces, etc.) but without a specific written policy or duration.</p></article>
+          <article class="card"><p>Air conditioner rentals: "Full Lifetime Warranty" is stated on the cooling systems page.</p></article>
+          <article class="card"><p>Solar panels: "product warranties" and "workmanship warranties" are included, described as offering "long-term protection", with no specific year figures given.</p></article>
+          <article class="card"><p>Smart battery storage: "10-year warranty covering all components."</p></article>
+          <article class="card"><p>No specific warranty length or terms are published for furnaces, air conditioners, heat pumps, boilers, water heaters, air handlers, or fireplaces; these pages only use general phrases like "satisfaction guaranteed" with no numeric warranty period.</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/cooling-systems/">https://comfortnext.ca/cooling-systems/</a>, <a href="https://comfortnext.ca/solar-panel-system/">https://comfortnext.ca/solar-panel-system/</a>, <a href="https://comfortnext.ca/smart-battery-storage/">https://comfortnext.ca/smart-battery-storage/</a>, <a href="https://comfortnext.ca/furnace-services/">https://comfortnext.ca/furnace-services/</a>, <a href="https://comfortnext.ca/boiler-services/">https://comfortnext.ca/boiler-services/</a>)</p>
+      </section>
+
+      <section id="maintenance" data-block>
+        <h2>Maintenance plans</h2>
+        <div class="stack">
+          <article class="card"><p>Maintenance is offered for furnaces, heat pumps, air conditioners, boilers, water heaters, and air handlers, generally following a four step process: consultation, planning, maintenance/tune-up, and a safety inspection (for gas equipment: checking for gas leaks, carbon monoxide, and ventilation compliance).</p></article>
+          <article class="card"><p>Typical furnace/heat pump tune-up includes: inspection, cleaning, filter replacement, checking refrigerant levels and electrical components, and testing.</p></article>
+          <article class="card"><p>No named maintenance plan tiers, membership program, or specific pricing were found; the site consistently directs visitors to request a quote or call 833-888-6398 for maintenance pricing.</p></article>
+        </div>
+        <p class="sources">(Sources: <a href="https://comfortnext.ca/furnace-services/furnace-maintenance/">https://comfortnext.ca/furnace-services/furnace-maintenance/</a>, <a href="https://comfortnext.ca/heat-pumps/heat-pump-maintenance/">https://comfortnext.ca/heat-pumps/heat-pump-maintenance/</a>)</p>
+      </section>
+
+      <section id="events" data-block>
+        <h2>Events and contests (Fall Home Show etc.)</h2>
+        <article class="note"><p>No mention of a Fall Home Show, Amanda video kiosk, contests, or promotional events was found anywhere in the 39 pages of the comfortnext.ca sitemap. This content did not appear on this site as crawled.</p></article>
+        <p class="sources">(Source: full comfortnext.ca sitemap crawl, 2026-09-28)</p>
+      </section>
+
+      <section id="faqs" data-block>
+        <h2>FAQs the agent should be able to answer</h2>
+        <article class="faq">
+          <p class="q"><span>Q:</span> What does Comfort Next do?</p>
+          <p>A: Comfort Next is a full-service heating, cooling and smart energy company serving Aurora and the Greater Toronto Area, offering furnaces, air conditioners, heat pumps, boilers, water heaters, air quality equipment, fireplaces, solar panels, smart battery storage, and EV charger installation. (<a href="https://comfortnext.ca/">https://comfortnext.ca/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> What areas does Comfort Next serve?</p>
+          <p>A: Aurora, Newmarket, Milton, Vaughan, Brantford, and the wider GTA, Barrie, and Midland area of Southern Ontario. (<a href="https://comfortnext.ca/contact-us/">https://comfortnext.ca/contact-us/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> How can a customer reach Comfort Next?</p>
+          <p>A: By phone at 833-888-6398, by email at hello@comfortnext.ca, or through the contact form at comfortnext.ca/contact-us. The office is at 25-220 Industrial Pkwy S, Aurora, ON L4G3V6. (<a href="https://comfortnext.ca/contact-us/">https://comfortnext.ca/contact-us/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> Does Comfort Next offer emergency service?</p>
+          <p>A: Yes, 24/7 emergency service is offered for heat pumps, furnaces, air conditioners, boilers, and water heaters, with same-day service common. (<a href="https://comfortnext.ca/furnace-services/furnace-repair/">https://comfortnext.ca/furnace-services/furnace-repair/</a>, <a href="https://comfortnext.ca/heat-pumps/heat-pump-repairs/">https://comfortnext.ca/heat-pumps/heat-pump-repairs/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> What rebates are available?</p>
+          <p>A: Up to $7,500 for a qualified heat pump upgrade, up to $12,000 total through the 2025 Home Renovation Savings Program, and up to $10,000 for solar or battery storage upgrades, subject to eligibility. Exact amounts vary by upgrade type. (<a href="https://comfortnext.ca/offers-and-rebates/">https://comfortnext.ca/offers-and-rebates/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> Does Comfort Next offer financing?</p>
+          <p>A: Yes, 12-month no-payment, no-interest financing through FinanceIt, and rent-to-own or rental options with maintenance included. (<a href="https://comfortnext.ca/">https://comfortnext.ca/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> What brands does Comfort Next carry?</p>
+          <p>A: Carrier is the primary HVAC brand (Comfort, Performance, and Infinity series for cooling), Napoleon for fireplaces, and they also service all other brands and models for repair. (<a href="https://comfortnext.ca/cooling-systems/">https://comfortnext.ca/cooling-systems/</a>, <a href="https://comfortnext.ca/fireplace-services/">https://comfortnext.ca/fireplace-services/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> Does Comfort Next install and repair boilers?</p>
+          <p>A: Yes, sales, rentals, installation, repair, and maintenance for conventional, condensing, and combi boilers; standard installs take 1 to 2 days. (<a href="https://comfortnext.ca/boiler-services/">https://comfortnext.ca/boiler-services/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> What is Comfort Next's guarantee?</p>
+          <p>A: The company states "Satisfaction Guaranteed" and "no hidden fees" with transparent, upfront pricing on essentially every service; specific warranty terms beyond that (for example, the 10-year battery storage warranty or lifetime rental AC warranty) vary by product. (<a href="https://comfortnext.ca/furnace-services/">https://comfortnext.ca/furnace-services/</a>, <a href="https://comfortnext.ca/smart-battery-storage/">https://comfortnext.ca/smart-battery-storage/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> How long has Comfort Next been in business?</p>
+          <p>A: More than 25 years serving families and businesses in Southern Ontario. (<a href="https://comfortnext.ca/about-us/">https://comfortnext.ca/about-us/</a>)</p>
+        </article>
+        <article class="faq">
+          <p class="q"><span>Q:</span> What is Comfort Next's Google rating?</p>
+          <p>A: 4.9 out of 5 based on 376 Google reviews, and the company is Google Guaranteed certified. (<a href="https://comfortnext.ca/">https://comfortnext.ca/</a>)</p>
+        </article>
+      </section>
+
+      <section id="barbecues" data-block>
+        <h2>Barbecues</h2>
+        <article class="note" style="margin-bottom: 14px;"><p>We also carry barbecues through Aire One Heating &amp; Cooling KW. All barbecue models currently listed are Napoleon grills, available in natural gas or propane, in Black or Stainless Steel finishes (and a Heritage Blue special edition). Pricing and stock should always be confirmed directly with Aire One before quoting a customer.</p></article>
+        <div class="filters" role="group" aria-label="Filter by fuel">
+          <button type="button" data-fuel="all" aria-pressed="true">All</button>
+          <button type="button" data-fuel="Natural Gas" aria-pressed="false">Natural Gas</button>
+          <button type="button" data-fuel="Propane" aria-pressed="false">Propane</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Fuel</th>
+                <th>Price</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody id="grills">
+              <tr data-fuel="Natural Gas">
+                <td>50th Anniversary Edition Prestige 500 Connected RSIB Grill, Heritage Blue</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$2,949.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-50th-anniversary-edition-prestige-500-connected-rsib-natural-gas-grill-heritage-blue/">https://aireonekw.ca/product/napoleon-50th-anniversary-edition-prestige-500-connected-rsib-natural-gas-grill-heritage-blue/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>50th Anniversary Edition Prestige 500 Connected RSIB Grill, Heritage Blue</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$2,899.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-50th-anniversary-edition-prestige-500-connected-rsib-propane-gas-grill-heritage-blue/">https://aireonekw.ca/product/napoleon-50th-anniversary-edition-prestige-500-connected-rsib-propane-gas-grill-heritage-blue/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Phantom Prestige 500 Connected RSIB Grill, Matte Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$2,749.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-phantom-prestige-500-connected-rsib-natural-gas-grill-matte-black/">https://aireonekw.ca/product/napoleon-phantom-prestige-500-connected-rsib-natural-gas-grill-matte-black/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Phantom Prestige 500 Connected RSIB Grill, Matte Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$2,699.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-phantom-prestige-500-connected-rsib-propane-gas-grill-matte-black/">https://aireonekw.ca/product/napoleon-phantom-prestige-500-connected-rsib-propane-gas-grill-matte-black/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Prestige PRO 500 RSIB Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$2,999.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-prestige-pro-500-rsib-propane-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-prestige-pro-500-rsib-propane-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Prestige 500 Connected RSIB Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$2,449.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-prestige-500-connected-rsib-natural-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-prestige-500-connected-rsib-natural-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Prestige 500 Connected RSIB Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$2,399.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-prestige-500-connected-rsib-propane-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-prestige-500-connected-rsib-propane-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Prestige 500 RSIB Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$2,249.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-prestige-500-rsib-natural-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-prestige-500-rsib-natural-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Prestige 500 RSIB Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$2,199.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-prestige-500-rsib-propane-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-prestige-500-rsib-propane-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Prestige PRO 500 Smart Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$2,999.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-prestige-pro-500-smart-propane-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-prestige-pro-500-smart-propane-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue 425 Grill, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$849.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-425-natural-gas-grill-black/">https://aireonekw.ca/product/napoleon-rogue-425-natural-gas-grill-black/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue 425 Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$2,999.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-425-natural-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-425-natural-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue 425 Grill, Black (3 burners)</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$799.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-425-propane-gas-grill-black/">https://aireonekw.ca/product/napoleon-rogue-425-propane-gas-grill-black/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue 425 Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$899.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-425-propane-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-425-propane-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue 525 Grill, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$949.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-525-natural-gas-grill-black/">https://aireonekw.ca/product/napoleon-rogue-525-natural-gas-grill-black/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue 525 Grill, Stainless Steel (4 burners, 525 sq in grilling space)</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$1,049.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-525-natural-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-525-natural-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue 525 Grill, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$899.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-525-propane-gas-grill-black/">https://aireonekw.ca/product/napoleon-rogue-525-propane-gas-grill-black/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue 525 Grill, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$999.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-525-propane-gas-grill-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-525-propane-gas-grill-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue PRO 425 Grill with Infrared Side Burner, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$1,249.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-425-natural-gas-grill-with-infrared-side-burner-black/">https://aireonekw.ca/product/napoleon-rogue-pro-425-natural-gas-grill-with-infrared-side-burner-black/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue PRO 425 Grill with Infrared Side Burner, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$1,349.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-425-natural-gas-grill-with-infrared-side-burner-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-pro-425-natural-gas-grill-with-infrared-side-burner-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue PRO 425 Grill with Infrared Side Burner, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$1,199.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-425-propane-gas-grill-with-infrared-side-burner-black/">https://aireonekw.ca/product/napoleon-rogue-pro-425-propane-gas-grill-with-infrared-side-burner-black/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue PRO 425 Grill with Infrared Side Burner, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$1,299.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-425-propane-gas-grill-with-infrared-side-burner-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-pro-425-propane-gas-grill-with-infrared-side-burner-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue PRO 525 Grill with Infrared Side Burner, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$1,449.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-525-natural-gas-grill-with-infrared-side-burner-black/">https://aireonekw.ca/product/napoleon-rogue-pro-525-natural-gas-grill-with-infrared-side-burner-black/</a></td>
+              </tr>
+              <tr data-fuel="Natural Gas">
+                <td>Rogue PRO 525 Grill with Infrared Side Burner, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill gas">Natural Gas</span></td>
+                <td class="price">$1,549.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-525-natural-gas-grill-with-infrared-side-burner-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-pro-525-natural-gas-grill-with-infrared-side-burner-stainless-steel/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue PRO 525 Grill with Infrared Side Burner, Black</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$1,399.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-525-propane-gas-grill-with-infrared-side-burner-black/">https://aireonekw.ca/product/napoleon-rogue-pro-525-propane-gas-grill-with-infrared-side-burner-black/</a></td>
+              </tr>
+              <tr data-fuel="Propane">
+                <td>Rogue PRO 525 Grill with Infrared Side Burner, Stainless Steel</td>
+                <td>Napoleon</td>
+                <td><span class="pill propane">Propane</span></td>
+                <td class="price">$1,499.00</td>
+                <td><a class="linkish" href="https://aireonekw.ca/product/napoleon-rogue-pro-525-propane-gas-grill-with-infrared-side-burner-stainless-steel/">https://aireonekw.ca/product/napoleon-rogue-pro-525-propane-gas-grill-with-infrared-side-burner-stainless-steel/</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="sources">(Sources: <a href="https://aireonekw.ca/product-category/barbecues/">https://aireonekw.ca/product-category/barbecues/</a>, <a href="https://aireonekw.ca/product-category/barbecues/page/2/">https://aireonekw.ca/product-category/barbecues/page/2/</a>, <a href="https://aireonekw.ca/product-category/barbecues/page/3/">https://aireonekw.ca/product-category/barbecues/page/3/</a>, and individual product pages listed above. No sale prices were shown for any barbecue on any of the three listing pages.)</p>
+
+        <h3 style="margin: 8px 0 12px; letter-spacing: -0.02em;">How to talk about barbecues:</h3>
+        <div class="tiers">
+          <article class="tier"><p>Entry level: the Rogue 425 and Rogue 525 lines run roughly $799 to $1,049, a good fit for a smaller patio or a first time buyer.</p></article>
+          <article class="tier"><p>Mid range: the Rogue PRO 425 and Rogue PRO 525 lines with an infrared side burner run roughly $1,199 to $1,549.</p></article>
+          <article class="tier"><p>Premium: the Prestige and Prestige PRO 500 lines, plus the Phantom and 50th Anniversary special editions, run roughly $2,199 to $2,999, aimed at buyers who want a larger, feature rich grill (Wi-Fi/Bluetooth connectivity, integrated LCD display, infrared side and rear burners, rotisserie kit on some models).</p></article>
+          <article class="card"><p>All models are natural gas or propane, no charcoal or pellet models are currently listed.</p></article>
+          <article class="card"><p>The Rogue 525 natural gas grill in stainless steel is confirmed to have 4 burners and 525 square inches of grilling space; the Rogue 425 propane grill in black is confirmed to have 3 burners. Exact burner counts, BTU ratings, and dimensions are not published for most other models on the website.</p></article>
+          <article class="card"><p>Always confirm current price, stock, and exact specs with Aire One Heating &amp; Cooling KW before finalizing anything with a customer, since pricing and availability can change.</p></article>
+        </div>
+      </section>
+
+      <section id="gaps" data-block>
+        <h2>Gaps and uncertainties</h2>
+        <article class="gap"><p>No published business hours (opening/closing times) were found anywhere on comfortnext.ca; the site only advertises 24/7 availability.</p></article>
+        <article class="gap"><p>No mention of a Fall Home Show, Amanda video kiosk, or any contests/events was found on comfortnext.ca (this may live on a different site or have not been published there).</p></article>
+        <article class="gap"><p>Specific warranty lengths (in years) are missing for furnaces, air conditioners, heat pumps, boilers, water heaters, air handlers, and fireplaces; only general "Satisfaction Guaranteed" language is given.</p></article>
+        <article class="gap"><p>No specific installed-price figures are published for any comfortnext.ca service (furnace, AC, heat pump, boiler, water heater, fireplace, solar, battery, EV charger); the site consistently directs the customer to request a free quote or call 833-888-6398.</p></article>
+        <article class="gap"><p>No maintenance plan names, tiers, or membership pricing are published.</p></article>
+        <article class="gap"><p>No named team members or leadership bios were found on the About page.</p></article>
+        <article class="gap"><p>No specific awards beyond "Google Guaranteed" certification and a 4.9/376 Google rating were found.</p></article>
+        <article class="gap"><p>BTU ratings and full cooking area dimensions are not published for most barbecue models; only the Rogue 525 (natural gas, stainless) and Rogue 425 (propane, black) had a burner count or grilling area confirmed on their individual product pages.</p></article>
+        <article class="gap"><p>No sale/discounted prices were found on any of the three barbecue listing pages as crawled.</p></article>
+        <article class="gap"><p>All comfortnext.ca sitemap pages (39 total) and all three barbecue listing pages fetched successfully; no fetch failures occurred.</p></article>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const finder = document.getElementById("finder");
+    const count = document.getElementById("search-count");
+    const blocks = Array.from(document.querySelectorAll("[data-block]"));
+    const empty = document.getElementById("empty");
+    const links = Array.from(document.querySelectorAll(".nav a"));
+    const fuelButtons = Array.from(document.querySelectorAll(".filters button"));
+    const hero = document.querySelector(".hero");
+    const ITEM = ".card, .note, .rebate, .faq, .gap, .tier, .sources, #grills tr";
+    let fuel = "all";
+
+    function compact(value) {
+      return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    function wordsOf(query) {
+      return query.toLowerCase().split(/\s+/).filter(Boolean);
+    }
+
+    function matches(text, words) {
+      if (!words.length) return true;
+      const raw = text.toLowerCase();
+      const folded = compact(text);
+      return words.every((word) => {
+        if (raw.includes(word)) return true;
+        const foldedWord = compact(word);
+        return foldedWord.length > 0 && folded.includes(foldedWord);
+      });
+    }
+
+    function clearMarks(root) {
+      root.querySelectorAll("mark.hit").forEach((mark) => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+      });
+    }
+
+    function rangesFor(text, words) {
+      const ranges = [];
+      const lower = text.toLowerCase();
+      const indexMap = [];
+      let folded = "";
+      for (let i = 0; i < text.length; i += 1) {
+        if (/[a-z0-9]/i.test(text[i])) {
+          indexMap.push(i);
+          folded += text[i].toLowerCase();
+        }
+      }
+      words.forEach((word) => {
+        if (word.length > 1) {
+          let from = 0;
+          while (from < lower.length) {
+            const at = lower.indexOf(word, from);
+            if (at < 0) break;
+            ranges.push([at, at + word.length]);
+            from = at + word.length;
+          }
+        }
+        const foldedWord = compact(word);
+        if (foldedWord.length < 2) return;
+        let from = 0;
+        while (from < folded.length) {
+          const at = folded.indexOf(foldedWord, from);
+          if (at < 0) break;
+          ranges.push([indexMap[at], indexMap[at + foldedWord.length - 1] + 1]);
+          from = at + foldedWord.length;
+        }
+      });
+      ranges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+      const merged = [];
+      ranges.forEach(([start, end]) => {
+        const last = merged[merged.length - 1];
+        if (!last || start > last[1]) merged.push([start, end]);
+        else last[1] = Math.max(last[1], end);
+      });
+      return merged;
+    }
+
+    function highlight(root, words) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const parent = node.parentElement;
+          if (!parent || parent.closest("script, style, mark")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        const text = node.nodeValue;
+        const ranges = rangesFor(text, words);
+        if (!ranges.length) return;
+        const fragment = document.createDocumentFragment();
+        let last = 0;
+        ranges.forEach(([start, end]) => {
+          if (start > last) fragment.appendChild(document.createTextNode(text.slice(last, start)));
+          const mark = document.createElement("mark");
+          mark.className = "hit";
+          mark.textContent = text.slice(start, end);
+          fragment.appendChild(mark);
+          last = end;
+        });
+        if (last < text.length) fragment.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(fragment, node);
+      });
+    }
+
+    function fuelAllows(item) {
+      return !item.dataset.fuel || fuel === "all" || item.dataset.fuel === fuel;
+    }
+
+    function applyFilters() {
+      const words = wordsOf(finder.value.trim());
+      clearMarks(document.body);
+      let visibleItems = 0;
+
+      blocks.forEach((section) => {
+        const items = Array.from(section.querySelectorAll(ITEM));
+        const heading = section.querySelector("h2");
+        const headingMatch = matches(heading ? heading.textContent : "", words);
+        let sectionHits = 0;
+
+        items.forEach((item) => {
+          const allowed = fuelAllows(item);
+          const hit = matches(item.textContent, words) && allowed;
+          const show = words.length && headingMatch ? allowed : hit;
+          item.hidden = words.length ? !show : !allowed;
+          if (!item.hidden) sectionHits += 1;
+        });
+
+        section.querySelectorAll("h3").forEach((heading3) => {
+          const self = matches(heading3.textContent, words);
+          let sibling = heading3.nextElementSibling;
+          let childHit = false;
+          while (sibling && !sibling.matches("h2, h3")) {
+            if (sibling.matches(ITEM) && !sibling.hidden) childHit = true;
+            sibling.querySelectorAll(ITEM).forEach((item) => {
+              if (!item.hidden) childHit = true;
+            });
+            sibling = sibling.nextElementSibling;
+          }
+          heading3.hidden = words.length > 0 && !self && !childHit;
+        });
+
+        const table = section.querySelector(".table-wrap");
+        if (table) {
+          const rows = Array.from(section.querySelectorAll("#grills tr"));
+          table.hidden = rows.length > 0 && rows.every((row) => row.hidden);
+        }
+
+        const visible = sectionHits > 0 || (!words.length);
+        section.hidden = !visible;
+        if (words.length) visibleItems += sectionHits;
+      });
+
+      const heroHit = words.length > 0 && matches(hero.textContent, words);
+      if (heroHit) {
+        highlight(hero, words);
+        visibleItems += 1;
+      }
+      blocks.forEach((section) => {
+        if (!section.hidden && words.length) highlight(section, words);
+      });
+
+      links.forEach((link) => {
+        const section = document.querySelector(link.getAttribute("href"));
+        link.classList.toggle("is-hidden", Boolean(section && section.hidden));
+      });
+
+      empty.style.display = words.length && visibleItems === 0 ? "block" : "none";
+      count.hidden = words.length === 0;
+      count.textContent = visibleItems === 1 ? "1 result" : visibleItems + " results";
+    }
+
+    finder.addEventListener("input", applyFilters);
+
+    fuelButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        fuel = button.dataset.fuel;
+        fuelButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+        applyFilters();
+      });
+    });
+
+    const sections = links
+      .map((link) => document.querySelector(link.getAttribute("href")))
+      .filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      const visibleEntry = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visibleEntry) return;
+      links.forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === "#" + visibleEntry.target.id);
+      });
+    }, { rootMargin: "-20% 0px -65% 0px", threshold: [0.1, 0.25] });
+
+    sections.forEach((section) => observer.observe(section));
+  </script>
+</body>
+</html>
